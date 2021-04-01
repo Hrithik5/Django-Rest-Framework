@@ -1,24 +1,37 @@
-from django.shortcuts import render,redirect
-from django.http import HttpResponse,JsonResponse
+from django.shortcuts import render, redirect
+from django.http import HttpResponseRedirect, JsonResponse
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from .serializers import TodoSerializer
 from .models import Todo
-
+from .forms import TodoForm
 # Create your views here.
+
+
+def home(request):
+    if request.method == 'POST':
+        form = TodoForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('/')
+    else:
+        form = TodoForm()
+    return render(request, 'index.html', {'form': form})
+
 
 @api_view(['GET'])
 def apiOverview(request):
     api_urls = {
-        'List' : 'todo-list/',
-        'Detail View' : 'todo-detail/<str:pk>/',
-        'Create' : 'todo-create/',
-        'Update' : 'todo-update/<str:pk>/',
-        'Delete' : 'todo-delete/<str:pk>',
+        'List': 'todo-list/',
+        'Detail View': 'todo-detail/<str:pk>/',
+        'Create': 'todo-create/',
+        'Update': 'todo-update/<str:pk>/',
+        'Delete': 'todo-delete/<str:pk>',
     }
     return Response(api_urls)
+
 
 @api_view(['GET'])
 def TodoList(request):
