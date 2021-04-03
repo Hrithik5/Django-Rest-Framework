@@ -10,16 +10,6 @@ from .forms import TodoForm
 # Create your views here.
 
 
-def home(request):
-    if request.method == 'POST':
-        form = TodoForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('/')
-    else:
-        form = TodoForm()
-    return render(request, 'index.html', {'form': form})
-
 
 @api_view(['GET'])
 def apiOverview(request):
